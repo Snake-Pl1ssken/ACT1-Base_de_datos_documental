@@ -1060,6 +1060,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf9f155ae0b9dfa4296014a06cf277a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  arrowMesh: {fileID: -7929139438592967118, guid: 6650a0c98cda0994887dcc2a5018bd7f, type: 3}
+  arrowMaterial: {fileID: 2100000, guid: e4b56cece4d4aea48bc5cd237c2f6144, type: 2}
   serverAddress: mongodb://localhost:27017
   database: racer
   collection: races
