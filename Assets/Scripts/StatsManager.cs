@@ -7,14 +7,16 @@ using System;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using System.Security.Policy;
+using System.Xml.Linq;
+using System.Linq;
 
 public class StatsManager : MonoBehaviour
 {    
 
     public struct Stat
     {
-        public float time;
-        public float speed;
+        public double time;
+        public double speed;
 
     };
     public Mesh arrowMesh;
@@ -116,6 +118,8 @@ public class StatsManager : MonoBehaviour
         collectionMongo.InsertOne(doc);
 
         idObjectId = doc["_id"].AsObjectId; //BsonArray.AsBsonArray
+        //List<Stat> lst = collectionMongo.Find(d => true).ToArray();
+        //doc.FindOne(idObjectId);
         //la bd a añadido un id (aqui guardar el id y luego recuperarlo)
         //var id = doc.{ collectionMongo}
         //idString = id;
@@ -128,18 +132,28 @@ public class StatsManager : MonoBehaviour
 
     public int GetStats(Stat[] stats)
     {
-        // Get race stats from database
-
         int count = 0;
+        // Get race stats from database
+        Debug.Log("{ _id: '" + idObjectId + "'}");
+        List<BsonDocument> list = collectionMongo.Find<BsonDocument>("{ _id: ObjectId('" + idObjectId + "')}").ToList<BsonDocument>();
 
-        //foreach (int key in gateToStat.Keys)
-        //{
-        //    Debug.Log("Getting gate " + key);
-        //    stats[key] = gateToStat[key];
-        //    count++;
-        //}
-
-        return count;
+        //sacar del list el documento con carrera 
+        //debtro de documento hacer loop que pase por todas las gates
+        //en cada vuelta crear y poner stat en la posicion de outstat correspondiente
+        //Retornar num stats añadidos
+        BsonDocument doc = list.First();
+        BsonArray racesInDoc = doc["Race"].AsBsonArray;
+        //Debug.Log(racesInDoc["time"].AsDouble);
+        //Debug.Log(racesInDoc["speed"].AsDouble);
+        int ind = 0;
+        foreach (BsonDocument r in racesInDoc)
+        {
+            stats[ind].time = r["time"].AsDouble;
+            stats[ind].speed = r["speed"].AsDouble;
+            ind++;
+            count++;
+        }
+        return count; 
     }
 
     public void ClearStats()
