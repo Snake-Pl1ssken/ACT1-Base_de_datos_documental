@@ -171,4 +171,9 @@ public class LevelManager : MonoBehaviour
     {
         return (state == State.racing);
     }
+
+    public void OnCarTelemetry(Vector3 pos, Vector3 rot)
+    {
+        statsManagerC.OnCarTelemetry(pos, rot, timer);
+    }
 }

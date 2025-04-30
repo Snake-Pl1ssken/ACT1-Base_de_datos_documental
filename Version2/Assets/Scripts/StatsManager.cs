@@ -35,14 +35,10 @@ public class StatsManager : MonoBehaviour
     static IMongoCollection<BsonDocument> collectionMongo;
     ObjectId idObjectId;
 
-    // Start is called before the first frame update
     void Start()
     {
         gateToStat = new Dictionary<int, Stat>();
         
-
-        // Connect to database
-
         connection = new MongoClient(serverAddress);
         databaseMongo = connection.GetDatabase(database);
         collectionMongo = databaseMongo.GetCollection<BsonDocument>(collection);
@@ -53,7 +49,6 @@ public class StatsManager : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
     void Update()
     {
         float angle = 0;
@@ -74,11 +69,8 @@ public class StatsManager : MonoBehaviour
 
     public void OnRaceStarted()
     {
-        // Create race and register start date in database
         doc = new BsonDocument();
         e2 = new BsonElement("StartTime", new BsonDateTime(DateTime.Now));
-        //doc.Add(e);
-        //collectionMongo.InsertOne(doc);
         gatesArray = new BsonArray();
     }
 
@@ -90,19 +82,14 @@ public class StatsManager : MonoBehaviour
         s.time = time;
         s.speed = speed;
 
-       gateToStat[index] = s;
-
-        // Register gate in database
+        gateToStat[index] = s;
 
         doc = new BsonDocument();
         e = new BsonElement("time", s.time);
         doc.Add(e);
         e = new BsonElement("speed", s.speed);
         doc.Add(e);
-        //collectionMongo.InsertOne(doc);
         gatesArray.Add(doc);
-
-
     }
 
     public void OnRaceFinished()
@@ -127,8 +114,8 @@ public class StatsManager : MonoBehaviour
 
         Stat stats = new Stat();
 
+        
     }
-
 
     public int GetStats(Stat[] stats)
     {
@@ -159,5 +146,12 @@ public class StatsManager : MonoBehaviour
     public void ClearStats()
     {
         gateToStat.Clear();
+    }
+
+    public void OnCarTelemetry(Vector3 pos, Vector3 rot, float time)
+    {
+        Debug.Log("pos: " + pos + " rot: " + rot + " time: " + time);
+
+        //enviar estos datos a la base de datos de mongoDB
     }
 }
